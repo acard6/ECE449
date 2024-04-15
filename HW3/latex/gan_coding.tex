@@ -1,0 +1,105 @@
+\begin{Q}
+	\textbf{\Large Generative Adversarial Networks [Coding]}\\
+	
+	In this problem, you need to implement a Generative Adversarial Network and train it on MNIST digits.
+	
+	\begin{table}[h]
+		\begin{center}
+			\caption{\textbf{Discriminator Architecture}}
+			\label{GAN: dis}
+			\begin{tabular}{ccccccc}
+				\toprule
+				{\small\textit{Layer No.}}
+				& {\small \textit{Layer Type}}
+				& {\small \textit{Kernel Size}}
+				& {\small \textit{Stride}}
+				& {\small \textit{Padding}}
+				% & {\small \textit{Input Dim}}
+				% & {\small \textit{Output Dim}}
+				% & {\small \textit{Input Channels}}
+				& {\small \textit{Output Channels}} \\
+				\midrule
+				1 & conv2d   & 3 & 1 & 1 & 2 \\
+				2 & ReLU     & - & - & - & 2 \\
+				3 & MaxPool  & 2 & 2 & - & 2 \\
+				4 & conv2d   & 3 & 1 & 1 & 4 \\
+				5 & ReLU     & - & - & - & 4 \\
+				6 & MaxPool  & 2 & 2 & - & 4 \\
+				7 & conv2d   & 3 & 1 & 0 & 8 \\
+				8 & ReLU     & - & - & - & 8 \\
+				9 & Linear   & - & - & - & 1 \\
+				% 10 & ReLU    & - & - & - & 16 \\
+				% 11 & Linear  & - & - & - & 1 \\
+				\bottomrule
+			\end{tabular}
+		\end{center}
+	\end{table}
+	
+	\begin{table}[h]
+		\begin{center}
+			\caption{\textbf{Generator Architecture}}
+			\label{GAN: gen}
+			\begin{tabular}{ccccccc}
+				\toprule
+				{\small\textit{Layer No.}}
+				& {\small \textit{Layer Type}}
+				& {\small \textit{Kernel Size}}
+				& {\small \textit{Stride}}
+				& {\small \textit{Padding}}
+				& {\small \textit{Bias}}
+				% & {\small \textit{Input Dim}}
+				% & {\small \textit{Output Dim}}
+				% & {\small \textit{Input Channels}}
+				& {\small \textit{Output Channels}} \\
+				\midrule
+				1 & Linear             & - & - & - & \cmark & 1568 \\
+				2 & LeakyReLU(0.2)     & - & - & - & -      & 1568 \\
+				3 & Upsample(scale=2)  & - & - & - & \xmark & 32 \\
+				4 & conv2d             & 3 & 1 & 1 & \cmark & 16 \\
+				5 & LeakyReLU(0.2)     & - & - & - & -      & 16 \\
+				6 & Upsample(scale=2)  & - & - & - & \xmark & 16 \\
+				7 & conv2d             & 3 & 1 & 1 & \cmark & 8 \\
+				8 & LeakyReLU(0.2)     & - & - & - & -      & 8 \\
+				9 & conv2d             & 3 & 1 & 1 & \cmark & 1 \\
+				10 & sigmoid           & - & - & - & -      & 1 \\
+				\bottomrule
+			\end{tabular}
+		\end{center}
+	\end{table}
+	
+	\begin{enumerate}
+		\item Implement a discriminator \texttt{DNet} in \texttt{hw3\_gan.py} using the architecture described in Tab.\ \ref{GAN: dis}. Layers contain bias if corresponding \texttt{torch} function has an option for adding one.
+		
+		\textbf{Remark 1:} From layer 8 to layer 9, you need to flatten each data entry from a matrix to a vector.
+		
+		\item Implement a generator \texttt{GNet} in \texttt{hw3\_gan.py} using the architecture described in Tab.\ \ref{GAN: gen}.
+		
+		\textbf{Remark 2:} From layer 2 to layer 3, you need to reshape each data to size $(32, 7, 7)$ in the format of \textit{CHW}. Note,  $1568 = 32\times7\times7$.
+		
+		\textbf{Remark 3:} For (a) and (b), please define layers in \texttt{\_\_init\_\_} with \textbf{exactly the same} order as they appear in Tab.~\ref{GAN: dis} and Tab.~\ref{GAN: gen}.
+		
+		\textbf{Remark 4:} We have listed \textbf{all} layers for discriminator and generator. No need to add any extra components.
+		
+		\item Implement the weight initialization function \texttt{\_weight\_init} in \texttt{DNet} and \texttt{GNet}: use \texttt{kaiming\_uniform} for weights and 0 for the bias if the layer contains bias.
+		
+		\textbf{Hint:} to iterate over all layers of an \texttt{nn.Module}, you may find \texttt{self.children()} useful. See \texttt{children()} function explained in  \url{https://pytorch.org/docs/stable/generated/torch.nn.Module.html}.
+		
+		\item Implement the loss function for the discriminator: \texttt{\_get\_loss\_d} of \texttt{GAN} class in \texttt{hw3\_gan.py}.
+		
+		\textbf{Hint:} you may find \texttt{torch.nn.BCEWithLogitsLoss} useful.
+		
+		\item Implement the loss function for the generator: \texttt{\_get\_loss\_g} of \texttt{GAN} class in \texttt{hw3\_gan.py}.
+		
+		\textbf{Hint:} you may find \texttt{torch.nn.BCEWithLogitsLoss} useful.
+		
+		\item Attach generated images after training.
+		
+		\textbf{Remark 5:} the provided code default saves images during training. You can choose three of the saved ones and indicate the corresponding epochs.
+		
+		\textbf{Remark 6:} with default training settings, you should obtain reasonable generated images after around 30 epochs.
+		
+	\end{enumerate}
+	
+\end{Q}
+
+

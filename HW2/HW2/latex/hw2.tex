@@ -1,0 +1,278 @@
+        \documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,commath,dsfont}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{float}
+\usepackage[round]{natbib}
+\usepackage{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[breakable]{tcolorbox}
+\tcbset{breakable}
+\usepackage{mathtools}
+\usepackage{subcaption}
+%\usepackage{symbols}
+
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+\newcommand{\colbar}{\rule[-3mm]{.3mm}{1.5em}}
+\newcommand{\rowbar}{\rule[.5ex]{1.5em}{.3mm}}
+\DeclareMathOperator{\rank}{rank}
+
+% following loops stolen from djhsu
+\def\ddefloop#1{\ifx\ddefloop#1\else\ddef{#1}\expandafter\ddefloop\fi}
+% \bbA, \bbB, ...
+\def\ddef#1{\expandafter\def\csname bb#1\endcsname{\ensuremath{\mathbb{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
+% \cA, \cB, ...
+\def\ddef#1{\expandafter\def\csname c#1\endcsname{\ensuremath{\mathcal{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
+% \vA, \vB, ..., \va, \vb, ...
+\def\ddef#1{\expandafter\def\csname v#1\endcsname{\ensuremath{\boldsymbol{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\ddefloop
+
+% \valpha, \vbeta, ...,  \vGamma, \vDelta, ...,
+\def\ddef#1{\expandafter\def\csname v#1\endcsname{\ensuremath{\boldsymbol{\csname #1\endcsname}}}}
+\ddefloop {alpha}{beta}{gamma}{delta}{epsilon}{varepsilon}{zeta}{eta}{theta}{vartheta}{iota}{kappa}{lambda}{mu}{nu}{xi}{pi}{varpi}{rho}{varrho}{sigma}{varsigma}{tau}{upsilon}{phi}{varphi}{chi}{psi}{omega}{Gamma}{Delta}{Theta}{Lambda}{Xi}{Pi}{Sigma}{varSigma}{Upsilon}{Phi}{Psi}{Omega}{ell}\ddefloop
+
+\newcommand\T{{\scriptscriptstyle\mathsf{T}}}
+\def\diag{\textup{diag}}
+
+
+
+\def\SPAN{\textup{span}}
+\def\tu{\textup{u}}
+\def\R{\mathbb{R}}
+\def\E{\mathbb{E}}
+\def\Z{\mathbb{Z}}
+\def\be{\mathbf{e}}
+\def\nf{\nabla f}
+\def\veps{\varepsilon}
+\def\cl{\textup{cl}}
+\def\inte{\textup{int}}
+\def\dom{\textup{dom}}
+\def\Rad{\textup{Rad}}
+\def\lsq{\ell_{\textup{sq}}}
+\def\hcR{\widehat{\cR}}
+\def\hcRl{\hcR_\ell}
+\def\cRl{\cR_\ell}
+\def\hcE{\widehat{\cE}}
+\def\cEl{\cE_\ell}
+\def\hcEl{\hcE_\ell}
+\def\eps{\epsilon}
+\def\1{\mathds{1}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\def\srelu{\sigma_{\textup{r}}}
+\def\vsrelu{\vec{\sigma_{\textup{r}}}}
+\def\vol{\textup{vol}}
+\def\hw{\textbf{[\texttt{hw2}]}\xspace}
+\def\hwcode{\textbf{[\texttt{hw2code}]}\xspace}
+
+\newcommand{\ip}[2]{\left\langle #1, #2 \right \rangle}
+\newcommand{\mjt}[1]{{\color{blue}\emph\textbf{[M:}~#1~\textbf{]}}}
+\newcommand{\sahand}[1]{{\color{green}\emph\textbf{[Sah:}~#1~\textbf{]}}}
+
+
+\newtheorem{fact}{Fact}
+\newtheorem{lemma}{Lemma}
+\newtheorem{condition}{Condition}
+\theoremstyle{definition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\newenvironment{Q}
+{%
+	\clearpage
+	\item
+}
+{%
+	\phantom{s} %lol doesn't work
+	\bigskip
+	\textbf{Solution.}
+}
+
+\title{CS 446 / ECE 449 --- Homework 2}
+\author{\emph{acard6}}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	\noindent\textbf{Instructions.}
+	\begin{itemize}
+		\item
+		Homework is due \textbf{\color{red}Tuesday, Feb. 21, at noon CDT}; no late homework accepted.
+		
+		\item
+		Everyone must submit individually at gradescope under \texttt{hw2} and \texttt{hw2code}.
+		
+		\item
+		The ``written'' submission at \texttt{hw2} \textbf{must be typed}, and submitted in
+		any format gradescope accepts (to be safe, submit a PDF).  You may use \LaTeX, markdown,
+		google docs, MS word, whatever you like; but it must be typed!
+		
+		\item
+		When submitting at \texttt{hw2}, gradescope will ask you to mark out boxes
+		around each of your answers; please do this precisely!
+		
+		\item
+		Please make sure your NetID is clear and large on the first page of the homework.
+		
+		\item
+		Your solution \textbf{must} be written in your own words.
+		Please see the course webpage for full academic integrity information.
+		Briefly, you may have high-level discussions with at most 3 classmates,
+		whose NetIDs you should place on the first page of your solutions,
+		and you should cite any external reference you use; despite all this,
+		your solution must be written in your own words.
+		
+		\item
+		We reserve the right to reduce the auto-graded score for
+		\texttt{hw2code} if we detect funny business (e.g., your solution
+		lacks any algorithm and hard-codes answers you obtained from
+		someone else, or simply via trial-and-error with the autograder).
+		
+		\item
+		When submitting to \texttt{hw2code}, only upload \texttt{hw2\_ResNet.py}. Additional files will be ignored.
+		
+		\item
+		Gradescope coding questions are marked by ``\texttt{[code]}.''
+		
+	\end{itemize}
+	
+	
+	\begin{enumerate}[font={\Large\bfseries}]
+        \input{EM.tex} 
+		\begin{itemize}
+			\item[\textit{Answer A.i)}] A given D $~$ bernoulli distribution is $P(D|\theta) =\theta^x(1-\theta)^{1-x}$ therefore the likelihood P becomes 
+			$$P(x|q) = \Pi_{d=1}^D q_d^{x_d}(1-q_d)^{1-x_d}$$\\
+			
+			\item[\textit{Answer A.ii)}] {$P(x^i |\pi,p) = \sum_{k=1}^K \pi_k Bern(x^i | p^k) = \sum_{k=1}^K \pi_k P(x^i|p^k) =\\
+			 \sum_{k=1}^K \pi_k \Pi_{d=1}^D (p_{d}^{k})^{x_{d}^{i}}(1-p_{d}^{k})^{1-x_{d}^{i}}$}\\
+		
+			\item[\textit{Answer A.iii)}] $P(\mathcal{D}|\pi,p) = 
+			\Pi_{i=1}^n(P(x^i|\pi,p)) = 
+			\Pi_{i=1}^n(\sum_{k=1}^K\pi_k P(x^i|\pi,p)) \rightarrow \\
+			log(P(\mathcal{D}|\pi,p)) = 
+			\sum_{i=1}^n \log(P(x^i|p,\pi)) = 
+			\\\sum_{i=1}^n(\sum_{k=1}^K\pi_k P(x^i|\pi,p)) = 
+			\sum_{i=1}^n(\log(\sum_{k=1}^K\pi_k (\sum_{d=1}^D (p_{d}^{k})^{x_{d}^{i}}(1-p_{d}^{k})^{1-x_{d}^{i}})))$\\
+
+			\item[\textit{Answer B.i)}] $P(z^i| \pi) = \Pi_{k=1}^K \pi_k^{z_k^i}$\\
+
+			\item[\textit{Answer B.ii)}] $P(x^i|z^i,p,\pi) = \Pi_{k=1}^K \pi_k^{z_k^i} = \Pi_{k=1}^K (P(x^i|p^k)^{z_k^i})$\\
+			
+			\item[\textit{Answer B.iii)}] $P(Z,\mathcal{D}|pi,p) = \Pi^n_{i=1} P(x^i,z^i| p, \pi) = \Pi^n_{i=1} P(x^i|z^i, p, \pi)P(z^i|\pi) =\\ 
+			\Pi^n_{i=1} \Pi^K_{k=1} \pi_k^{z_k^i} (P(x^i|p^k))^{z_k^i}$\\
+
+			\item[\textit{Answer B.iv)}] $\eta(z_k^i) = 
+			\mathbb{E} [z_{k}^{(i)}| x^{(i)},\pi,p] = 
+			P(z_k^i=1|x^i,p,\pi) = 
+			\frac{P(z^i_k=1|\pi,p)P(x^i|z^i_k=1,\pi,p)}{\sum_{j} P(z^i_{j}=1)P(x^i|z^i_{j},\pi,p)} = \\
+			\frac{\pi_kP(x^i|p^k)}{\sum_j \pi_jP(x^i|p^j)} = 
+			\frac{\pi_k \Pi_{d=1}^D (p_{d}^{k})^{x_{d}^{i}}(1-p_{d}^{k})^{1-x_{d}^{i}}}{\sum_j \pi_j \Pi_{d=1}^D (p_{d}^{j})^{x_{d}^{i}}(1-p_{d}^{j})^{1-x_{d}^{i}}}$\\
+
+			\item[\textit{Answer B.v)}] $log P(Z, \mathcal{D}|\tilde{p},\tilde{\pi}) = 
+			[\sum_{i=1}^{n} \sum_{k=1}^{K} z_k^i log(P(x^i|p^i))] +[\sum_{k=1}^{K}z_k^i \log(pi_k)] =\\ 
+			\sum_{i=1}^{n} \sum_{k=1}^{K} z_k^i [log(P(x^i|p^i)) + \log(\pi_k)] = \\
+			\sum_{i=1}^{n} \sum_{k=1}^{K} z_k^i [\log(\pi_k) + \sum_{d=1}^{D} (x^i_d)\log(p_d^k)+(1-x^i_d) \log(1-p_d^k)]$\\
+			taking the expectation of the previous equation we note $\mathbb{E}[z_k^i]=\eta(z_k^i)$ and leaving eveerything else to be the maximized parameters we arrive at:
+			$$\mathbb{E} [log P(Z, \mathcal{D}|\tilde{p}, \tilde{\pi}) | \mathcal{D}, p, \pi] = 
+			\sum_{i=1}^{n} \sum_{k=1}^{K} \eta(z_k^i) [\log(\tilde{\pi}_k) + \sum_{d=1}^{D} (x^i_d)\log(\tilde{p}_d^k)+(1-x^i_d) \log(1-\tilde{p}_d^k)]$$\\
+
+			\item[\textit{Answer C.i)}] $\frac{d}{dp^{(k)}} = \mathbb{E} [log P(Z, \mathcal{D}|p,\pi)] = \sum_{i=1}^{n} \eta(z_k^i)[\frac{x^i}{p^k}+\frac{1-x^i}{1-p^k}]=0 \rightarrow\\
+			\sum_{i=1}^{n} \eta(z^i_k)[x^i(1-p^k)+p^k(1-x^i)] = 0, \rightarrow 
+			\sum_{i=1}^{n} \eta(z^i_k)[x^i - p^k] = 0, \rightarrow\\
+			\sum_{i=1}^{n} \eta(z^i_k) x^i = \sum_{i-1}^{n} \eta(z_k^i) p^k \rightarrow \tilde{p}^k = \frac{\sum_{i=1}^{n} x^i \eta(z_k^i)}{\sum_{i=1}^{n} \eta(z_k^i)} \rightarrow
+			\tilde{p}^{(k)} = \frac{\sum_{i=1}^{n} x^i \eta(z_k^i)}{N_k}$\\
+
+			\item[\textit{AnswerC.ii)}] $\frac{d}{d\pi_k}\mathbb{E}[logP(Z, \mathcal{D}|p,\pi)] = 
+			\frac{d}{d\pi_k} \sum_{i} \sum_{k} \eta(z_k^i) \log(\pi_k) + \lambda (\sum_k \pi_k) =\\
+			\sum_{i=1}^n \frac{\eta(z_k^i)}{\pi_k} + \lambda \rightarrow
+			\pi_{k} = \frac{\sum_{i=1}^n \eta(z_k^i)}{\lambda} = \frac{N_k}{\lambda}$\\
+			solving for the lagrangian multiplier we take the derivative w.r.t $\lambda$, we get:\\
+			$\frac{d}{d\lambda} \sum_i \sum_k \eta(z_k^i)\log (N_k-\lambda) + (\sum_k N_k - \lambda) \rightarrow 
+			\frac{1}{\lambda} \sum_i \sum_k \eta(z_k^i) - 1 = 0 \rightarrow\\
+			\lambda = \sum_{k=1}^K N_k \rightarrow \tilde{\pi}_k = \frac{N_k}{\sum_{\hat{k}} N_{\hat{k}}}$
+
+		\end{itemize}
+		
+        \input{DeepNet.tex}
+		\begin{itemize}
+			\item[\textit{Answer A.)}] \includegraphics[scale=0.2]{deepNetDrawing.png}\\
+			\textbf{figure 1:} the drawing for Q2 part a\\
+
+			\item[\textit{Answer B.)}] $\frac{\delta \sigma_1}{\delta u} =
+			\frac{\delta}{\delta u} \frac{1}{1+e^{-x}} = 
+			\frac{e^{-u}}{(1+e^{-u})^2} = 
+			\sigma_1(1 - \sigma_1)$\\
+
+			\item[\textit{Answer C.)}] \textbf{Forward pass} is when you propogate your inputs through the deep net going through each layer and
+			measure the prediction made as an error.\\
+			\textbf{Backward pass} we start by measuring the error of a prediction to the output from a hidden layer until reaching the input and
+			computing an input that would get the output that was chosen.
+
+			\item[\textit{Answer D.)}] $\frac{\delta f}{\delta w_3} = 
+			\frac{\delta}{\delta w_3} w_3 \sigma_2 (w_2 \sigma_1 (w_1 x)) = \sigma_2 (w_2 \sigma_1 (w_1 x))$\\
+			We should retain the output of the second layer from the forward pass since the derivative w.r.t $w_3$ is just that value and retaining
+			it will make deriving for back propogation easier since we have retained that value already
+			
+			\item[\textit{Answer E.)}] $\frac{\delta f}{\delta w_2} = 
+			\frac{\delta f}{\delta \sigma_2(x_2)} \frac{\delta \sigma_2(x_2)}{\delta x_2} \frac{\delta x_2}{\delta w_2} \rightarrow
+			\frac{\delta f}{\delta \sigma_2(x_2)} = w_3, 
+			\frac{\delta \sigma_2(x_2)}{\delta x_2} = \sigma_2 (1-\sigma_2), 
+			\text{ and } \frac{\delta x_2}{\delta w_2} = \sigma_1(x_1)$
+			$$\frac{\delta f}{\delta w_2} = w_3 \sigma_2(x_2) (1-\sigma_2(x_2)) \sigma_1(x_1)$$
+			we would save the output of the function and the output of the second layer and 1 minus the second layer and the output of the first layer,
+			since we would then multiply those 4 values for back propogation
+			
+			\item[\textit{Answer F.)}] repeating the same process as E for $w_1$ instead leads to\\ 
+			$\frac{\delta f}{\delta w_2} = 
+			\frac{\delta f}{\delta \sigma_2} \frac{\delta \sigma_2}{\delta x_2} \frac{\delta x_2}{\delta \sigma_1} \frac{\delta \sigma_1}{\delta x_1} \frac{\delta x_1}{\delta w_2} \rightarrow 
+			\frac{\delta x_2}{\delta \sigma_1} = w_2, 
+			\frac{\delta \sigma_1}{\delta x_1} = \sigma_1 (1-\sigma_1), 
+			\frac{\delta x_1}{\delta w_2} = x$
+			$$\frac{\delta f}{\delta w_2} = w_3 \sigma_2(1-\sigma_2) w_2 \sigma_1(1-\sigma_1) x$$
+			we would need to retain the final output, the output to the second layer, the input to the second layer, the output to the first layer
+			and the input of out finction to be able to do back propogation. We should compute the derivatives in reverse order meaning we take
+			the last derivative (the last layer) first and then work backward towards the first derivative (first layer) since we need to know the
+			last derivative to be able to do all the derivatives since the previous layer just involves tacking on a bit of math the layer infront of it.
+			This order relates to the opposite of forward pass.
+
+			\item[\textit{Answer G.)}] the dimensions of convolution output are calculated as $[(I - F + 2*S)/2]+1$, where I is the input size, 
+			F is the filter size, P is the padding, and S is the stride we get $Dim = [(28 - 5 + 2 * 0) / 1] + 1 = 24$. So the dimensions is 24 x 24 x 20\\
+			After Applying a max-pooling with size 2x2, we assume S=2 and divide the dimensions by S to get $(\frac{24}{2},\frac{24}{2},20) $= 12 x 12 x 20. 
+
+			\item[\textit{Answer H.)}] to reduce to a size of 4, the function $[(I-F+2P/S)]+1=4$, assuming I=12 and P=0 , we get F=12-3S.
+			If we want 50 channels we need to solve $(I_C - F_C + 2P)/S + 1 = 50 \rightarrow (12 - (12-4S)/S) + 1 = 50 \rightarrow S=\frac{1}{12}$
+			, after solving this equation for F knowing S=1/12 we get F=11, so the convolution layer becomes 2x2x20
+		\end{itemize}
+
+        \input{ResNet.tex} 
+        	\begin{itemize}
+        	\item[\textit{Answer C)}].\\
+			\centering
+        		\includegraphics[scale=0.6]{loss_c_1.png}\\
+			\textbf{figure 2:} the plot if training and testing loss for C=1\\
+        	\end{itemize}
+		
+	\end{enumerate}
+
+\newpage
+
+\bibliography{shortbib}
+\bibliographystyle{plainnat}
+
+\end{document}

@@ -1,0 +1,72 @@
+\begin{Q}
+\textbf{\Large K-Means 2}\\
+
+We are given a dataset $\cD = \{(x)\}$ of 2d points $x\in\mathbb{R}^2$ which we are interested in partitioning into $K$ clusters, each having a cluster center $\mu_k$ ($k\in\{1, \ldots, K\}$) via the $k$-Means algorithm. This algorithm optimizes the following cost function:
+\begin{equation}
+	\min_{\mu_k, r} \sum_{x\in\cD,k\in\{1, \ldots, K\}} \frac{1}{2}r_{x,k}\|x - \mu_k\|_2^2 \quad\quad\text{s.t.}\quad \left\{\begin{array}{ll}
+r_{x,k}\in\{0,1\}&\forall x\in\cD,k\in\{1, \ldots, K\}\\
+\sum_{k\in\{1, \ldots, K\}} r_{x,k} = 1 & \forall x\in\cD
+\end{array}\right.
+\label{eq:KMeans2:main}
+\end{equation}
+
+\begin{enumerate}
+
+\item What is the domain for $\mu_k$?
+
+\item Given fixed cluster centers $\mu_k$ $\forall k\in\{1, \ldots, K\}$, what is the optimal $r_{x,k}$ for the program in Eq. \ref{eq:KMeans2:main}? Provide a reason?
+
+\item Given fixed $r_{x,k}$ $\forall x\in\cD,k\in\{1, \ldots, K\}$, what are the optimal cluster centers $\mu_k$ $\forall k\in\{1, \ldots, K\}$ for the program in Eq. \ref{eq:KMeans2:main}? 
+
+\textbf{Hint:} Reason by first computing the derivative w.r.t $\mu_k$.
+
+\item Using Pseudo-code, sketch the algorithm which alternates the aforementioned two steps. Is this algorithm guaranteed to converge and why? Is this algorithm guaranteed to find the global optimum? What is the reason?
+
+\textbf{Hint:} you can provide a counter-example to invalidate a statement.
+
+\item Please implement the aforementioned two steps. For the given dataset, after how many updates does the algorithm converge, what cost function value does it converge to and what are the obtained cluster centers? Visualize clusters at each step and attach the plots here. Please at least report numbers with one decimal point.
+
+\textbf{Remark:} how we count updates: when computing a set of new centroids from initialization, we call this one update.
+
+\textbf{Hint:} You may find \texttt{hw1\_utils.vis\_cluster} useful.
+
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%  ANSWERS  %%%%%%%%%%%%%%%%
+\begin{itemize}
+\item[\textit{Answer A)}] If the data is in the 2D-plane then the domain of $\mu_k$ is also 2D as a real value
+\item[\textit{Answer B)}] The optimal $r_{x,k}$  is   \begin{equation} r_{x,k} = \begin{cases} 1 & \text{for} \arg \min_{k} |x^{i} - \mu_k |^2 \\ 0 & \text{else} \end{cases} \end{equation}
+\item[\textit{Answer C)}] The optimal cluster centers $\mu_k \forall$ is $$\mu_k = \frac{\sum_{i \in D} r_{ik} x^{(i)}}{\sum_{i \in D} r_{ik}}$$
+\item[\textit{Answer D)}]  The following algorithm may not always be guaranteed to find global optimal since there is a possibility that when initializing the random starting centroids it can get stuck in local minima and not reach the correct optimum. To overcome this issue it is best to run it many times with different initial cluster centroid to ensure that optimum can be found.\\
+\begin{algorithm} 
+\caption{k-means clustering} 
+\begin{algorithmic} 
+\STATE Input $\mathcal{D} \leftarrow$ set of 2D points
+\STATE Input K $\leftarrow$ number of cluster centroid $\mu_k$
+\STATE randomly assign centroids to points in data
+\REPEAT
+\FOR {iteration $\leftarrow$ 1 to max\_iter}
+\FORALL {$x_i \in \mathcal{D}$}
+\STATE $r_{ik} \leftarrow \arg \min_k ||x_i-\mu_k||^2$
+\ENDFOR
+\FOR {$k \leftarrow 1 to K$}
+\STATE $\mu_k \leftarrow (\sum x^i $ that are a part of that $\mu_k$) / (the number of points in the $\mu_k$) 
+\ENDFOR
+\ENDFOR
+\UNTIL {max iteration or all cluster $\mu_k$ reach equalibrium}
+\end{algorithmic} 
+\end{algorithm}
+
+
+% \STATE to say something
+% \IF{<condition>} <text> \ELSIF{<condition>} <text> \ELSE <text> \ENDIF
+% \WHILE{<condition>} <text> \ENDWHILE
+% \LOOP <text> \ENDLOOP
+% \FOR{<condition>} <text> \ENDFOR
+
+
+\end{itemize}
+
+
+\end{Q}
+          

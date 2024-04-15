@@ -1,0 +1,63 @@
+\begin{Q}
+	\textbf{\Large Variational Auto-Encoders [Written]}\\
+	We use VAEs to learn the distribution of the data $x$. Let $z$ denote the
+	unobserved latent variable. We refer to the approximated posterior $q_\phi(z|x)$ as the encoder
+	and to the conditional distribution $p_\theta(x|z)$ as the decoder. Use these names to answer
+	the following questions.
+	\begin{enumerate}
+		\item We are interested in modeling data $x \in \{0,1\}^{G}$. Hence, we choose $p_\theta(x|z)$ to follow $G$ independent Bernoulli distributions. Recall, a Bernoulli distribution has a probability density function of 
+		$$
+		P(k)= 
+		\begin{cases}
+		1-p & \text{if } k = 0\\
+		p    & \text{if } k = 1
+		\end{cases}.
+		$$
+		Use $\hat{y}_j$ to denote the $j^\text{th}\in[1,G]$ dimension of the decoder's output, and similarly $x_j$ the $j^\text{th}\in[1,G]$ dimension of the data $x$. Write down the explicit form for $p_\theta(x|z)$ in terms of $\hat{y}_j$ and $x_j$. 
+		
+		\item We further assume that $z \in \mathbb{R}^{2}$ and that $q_\phi(z|x)$ follows a multi-variate Gaussian distribution with an identity covariance matrix. What is the output dimension of the encoder?
+		
+		\item  We want to maximize the log-likelihood $\log p_\theta(x)$. To this end we introduce a joint distribution $p_\theta(x,z)$ and reformulate the log-likelihood via
+		$$
+		\log p_\theta(x) = \log \sum_z q_{\phi}(z|x) \frac{p_\theta(x,z)}{q_{\phi}(z|x)}.
+		$$
+		Use Jensen's inequality to obtain a bound on the log-likelihood and divide the bound into two parts, one of which is the Kullback-Leibler divergence $\text{KL}(q_{\phi}(z|x), p(z)).$
+		
+		\item State at least two properties of the KL-divergence.
+		
+		
+		\item Recall, the evidence lower bound (ELBO) of the log likelihood, $\log p_{\theta}(x)$, is 
+		\begin{equation}\label{eq:elbo1}
+		\mathbb{E}_{q_\phi(z|x)} [\log p_\theta(x|z)] - \text{KL}(q_\phi(z|x), p(z)).
+		\end{equation}
+		We can also write the ELBO as
+		\begin{equation}
+		\mathbb{E}_{q_\phi(z|x)} [\log p_\theta(x|z) + \log p(z) - \log(q_\phi(z|x)].
+		\label{eq:elbo2}
+		\end{equation}
+		{\bf Practically}, will training a VAE using the formulation in Eq. \ref{eq:elbo1} be the same as the one in Eq. \ref{eq:elbo2}? If not, why use one formulation over another?
+		\item Observe that the ELBO in Eq.~\ref{eq:elbo1} works for any $q_\phi$ distribution. Is it a good idea to choose $q_\phi(z|x) := \cN(0, I)$? In other words, why is an encoder necessary?
+		
+		
+		\item Let
+		$$
+		q_{\phi}(z|x) = \frac{1}{\sqrt{2\pi\sigma_{\phi}^2}} \exp\left(-\frac{1}{2\sigma_{\phi}^2}(z - \mu_{\phi})^2\right).
+		$$
+		What is the value for the KL-divergence $\text{KL}(q_{\phi}(z|x), q_{\phi}(z|x))$ and why?
+		\item Further, let
+		$$
+		p(z) =  \frac{1}{\sqrt{2\pi\sigma_{p}^2}} \exp\left(-\frac{1}{2\sigma_{p}^{2}}(z - \mu_p)^2\right).
+		$$
+		Note the difference of the means for $p(z)$ and $q_{\phi}(z|x)$ while their standard deviations are identical. Assume that $\sigma=\sigma_{\phi}=\sigma_{p}$. What is the value for the KL-divergence $\text{KL}(q_{\phi}(z|x), p(z))$ in terms of $\mu_p$, $\mu_{\phi}$ and $\sigma$?
+		
+		\item Now, let $q_{\phi}(z|x)$ and $p(z)$ be  arbitrary probability distributions. We want to find that $q_{\phi}(z|x)$ which maximizes 
+		$$
+		\sum_z q_{\phi}(z|x)\log p_\theta(x|z) - \text{KL}(q_{\phi}(z|x), p(z))	
+		$$
+		subject to $\sum_z q_{\phi}(z|x) = 1$. Ignore the non-negativity constraints. State the Lagrangian and compute its stationary point, i.e., solve for $q_{\phi}(z|x)$ which depends on $p_\theta(x|z)$ and $p(z)$. Make sure to get rid of the Lagrange multiplier.
+		\item Which of the following terms should $q_{\phi}(z|x)$ be equal to: 
+		(1) $p(z)$; (2) $p_\theta(x|z)$; (3) $p_\theta(z|x)$; (4) $p_\theta(x, z)$.
+	\end{enumerate}
+\end{Q}
+
+

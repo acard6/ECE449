@@ -1,0 +1,60 @@
+\begin{Q}
+\textbf{\Large Gaussian Mixture Models}\\
+
+Consider a Gaussian mixture model with $K$ components ($k\in\{1, \ldots, K\}$), each having mean $\mu_k$, variance $\sigma_k^2$, and mixture weight $\pi_k$. Further, we are given a dataset $\mathcal{D} = \{x_i\}$, where $x_i \in \mathbb{R}$. We use $z_{i} = \{z_{ik}\}$ to denote the latent variables.
+
+
+\begin{enumerate}
+
+\item What is the log-likelihood of the data according to the Gaussian Mixture Model (use $\mu_k$, $\sigma_k$, $\pi_k$, $K$, $x_i$, and $\mathcal{D}$)?
+
+\item Assume $K=1$,  find the maximum likelihood estimate for the parameters ($\mu_{1}$, $\sigma_{1}^{2}$, $\pi_{1}$).
+
+\item What is the probability distribution on the latent variables, i.e., what is the distribution
+$p(z_{i,1}, z_{i,2}, \cdots, z_{i,K} )$ underlying Gaussian mixture models. Also give its name.
+
+
+\item For general $K$, what is the posterior probability $p(z_{ik} = 1|x_i)$? To simplify, wherever possible, use $\mathcal{N}(x_{i}|\mu_{k},\sigma_{k})$, a Gaussian distribution over $x_{i} \in \mathbb{R}$ having mean $\mu_{k}$ and variance $\sigma_{k}^2$.
+
+
+\item  How are k-Means and Gaussian Mixture Model related? (There are three conditions)
+
+\textbf{Hint:} Think of variance, $\pi_k$, and hard/soft assignment.
+
+\item  Show that:
+$$
+\lim_{\epsilon \rightarrow 0} -\epsilon \log \sum_{k=1}^{K} \exp{(-F_{k}/\epsilon) } = \min_{k} F_{k}, \quad \epsilon \in \mathbb{R}^{+}
+$$
+\textbf{Hint:} Use l'Hopital's rule.
+
+\item Consider the modified Gaussian Mixture Model objective:
+$$
+\min_{\mu} - \sum_{x_{i} \in \mathcal{D}} \epsilon \log \sum_{k=1}^{K} \exp{(-(x_{i} - \mu_{k} )^{2}/\epsilon) }.
+$$
+Conclude that the objective for k-Means is the 0-temperature limit of Gaussian Mixture Model.
+
+\textbf{Hint:} Let $F_{k}= (x-\mu_{k})^{2}$ and apply the equation you proved in (f).
+
+\end{enumerate}
+
+\begin{itemize}
+\item[\textit{Answer A)}] The log likelihood of of $p(x_i |\pi, \mu, \sigma) = \sum_{k=1}^K \pi_k \mathcal{N}(x^{(i)}|\mu_k,\sigma_k)$ is $log(\sum_{k=1}^K \pi_k \mathcal{N}(x_i|\mu_k,\sigma_k) )$
+
+\item[\textit{Answer B)}] Assuming that $K = 1$ we can find the MLE by maximizing the log-likelihood function, which in this case is $log(N(x_i|\mu_k,\sigma_k)= log(p(x_i)|\mu, \sigma) = \sum_(i \in \mathcal{D}) \frac{(x_i-\mu)^2}{2 \sigma^2}+ \frac{N}{2}log(2\pi \sigma^2) $, where N is the size of the dataset. since K=1 there is no need for summation and $\pi_1=1$ since it can be no other value. Thus maximizing the MLE for $\mu$ and $\sigma$, we get the sample mean and variance $\mu = \frac{1}{N}\sum_{i \in \mathcal{D}}x_i  \text{,   }\sigma^2 = \frac{1}{N}\sum_{i \in \mathcal{D}}(x_i-\mu)^2$
+
+\item[\textit{Answer C)}] the probability of the auxiliary variable is $p(z_{ik}=1) =\pi_k \text{, } \Pi^K_{k=1}\pi_k^{z_{ik}},  z_i= [z_{i1},\text{...},z_{iK}]^T$
+
+\item[\textit{Answer D)}] for a general K the posterior probability is $p(z_{ik}|x_i) = \frac{\pi_k \mathcal{N}(x_i|\mu_k,\sigma_k)}{\sum^K_{\widehat{k}=1} \pi_{\widehat{k}} \mathcal{N}(x_i|\mu_{\widehat{k}},\sigma_{\widehat{k}})}$
+
+\item[\textit{Answer E)}] while both kmean and gmm are unsupervised learning techniques that use pre-determined clusters numbers, they relate in how they label the datas relation to one another using distance to determine how related they are to the rest of the data in some shape. As well as their use of the variance of the data to better form relations between each iteration to better fit a mold for the data, and determing how to assign data to a cluster whether the use of probability $\pi$ or not.
+
+\item[\textit{Answer F)}] so consider $f(\epsilon) = -epsilon, g(\epsilon) = \sum_{k=1}^K exp(-F_k/\epsilon), h(\epsilon) = log(g(\epsilon))$ the limit as f approaches 0 is 0 and the limit as h approaches 0 from the right is $log \sum_{k=1}^K exp(-F_k/\epsilon) = log \sum_{k=1}^K exp(-\inf) = log(k*0) = log(0) \rightarrow \lim_{x\rightarrow 0^+} log(x) = -\inf$ so we get $\lim_{\epsilon \rightarrow 0} f(\epsilon)h(\epsilon)=0*-\inf$ by l'Hopitals we get $f'(\epsilon) = -1, h'(\epsilon) = \frac{1}{g(\epsilon)}g'(\epsilon) = \frac{\sum_{k=1}^k F_k*exp(-F_k/\epsilon)}{\epsilon^2 \sum_{k=1}^K exp(-F_k/\epsilon)} = \frac{1}{\epsilon^2} \sum_{k=1}^K \frac{F_k*exp(-F_k/\epsilon)}{exp(-F_k/\epsilon)} = \sum \frac{F_k}{\epsilon^2}$
+$$\lim_{\epsilon \rightarrow 0} \sum_{k=1}^K F_k/\epsilon^2 = \lim_{\epsilon \rightarrow 0} \frac{d^2}{d\epsilon^2} \sum^K_{k=1} F_k/\epsilon^2 = \min_{k} F_k / 1 = \min_k F_k$$
+
+\item[\textit{Answer G)}] if $F_k = (x-\mu_k)^2$ then $$\lim_{\epsilon \rightarrow 0^+} \min_{\mu} -\sum_{x_i \in \mathcal(D)} \epsilon log \sum exp(F_k/\epsilon) = \min_{\mu} \sum_{x_i \in \mathcal(D)}  min_{k} F_k = \min_{\mu} \min_k \sum_{x_i \in \mathcal{D}} (x_i - \mu)^2$$ is the cost function of k-means clustering, therefore the k-mean is the 0-temp limit of the gaussian mixture model
+ 
+\end{itemize}
+
+
+\end{Q}
+          

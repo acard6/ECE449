@@ -1,0 +1,64 @@
+\begin{Q}
+	\textbf{\Large Variational Auto-Encoders [Coding]}\\
+	
+	In this assignment, you will implement a Variational Autoencoder and train it on  MNIST
+	digits. Each datapoint $x$ in the MNIST dataset is a $28 \times 28$ grayscale image (i.e., pixel values are between 0 and 1) of a handwritten digit in $\{0, \dots, 9\}$, and a label indicating which number. The prior over each digit's latent representation $z$ is a multivariate standard normal distribution, i.e., $z \sim \mathcal{N}(0,I) $. For all questions, we set the dimension of the latent space $D_z$ to 2. Given the latent representation $z$ for an image, the distribution over all $784$ pixels in the image is given by a product of independent Bernoulli, whose characteristic probabilities are given by the output of a neural network $f_{\theta}(z)$ (the decoder):
+	\begin{equation}
+	p_{\theta}(x|z) = \prod_{d=1}^{784} \text{Ber}(x_{d}|f_{\theta}(z) ).
+	\end{equation}
+	\textbf{Relevant files: } \textit{hw3\_vae.py}, \textit{hw3\_utils.py}.
+	
+	\begin{enumerate}
+		\item  \textbf{Decoder Architecture}.
+		Given a latent representation $z$, the decoder produces a $784$-dimensional vector representing the Bernoulli distribution characteristic probability, i.e., the probability for every pixel in the image being labeled 1. Define the decoder parameters in the method \textit{\_\_init\_\_}  of the \textit{Decoder} class and implement the corresponding \textit{forward} function. The decoder architecture is a multi-layer perceptron (i.e., a fully-connected neural network), with two hidden layers, followed each by a non linearity: \textit{tanh} after the first layer and \textit{sigmoid} after the second layer. The hidden dimension is set to 500 units.
+		
+		\item \textbf{Distributions}.
+		\begin{enumerate}
+			\item Implement the method \textit{logpdf\_diagonal\_gaussian} that, given a latent representation $z$, a mean $\mu$ and the variance $\sigma^2$, outputs the log-likelihood of the normal distribution  $\mathcal{N}(\mu,\sigma^2 I)$.
+			
+			\item  Implement a function \textit{logpdf\_bernoulli} that, given a sample $x$ and a probability $p$,  outputs the log-likelihood of a Bernoulli distribution.
+			
+			\item  Implement the function \textit{sample\_diagonal\_gaussian} which uses the reparametrization trick to sample $z$ from Diagonal Gaussian $z \sim \mathcal{N}(\mu,\sigma^2 I)$.
+			\item  Implement the function \textit{sample\_Bernoulli} which samples a configuration $x$ from a Bernoulli distribution characterized by a probability $p$.
+		\end{enumerate}
+		
+		\item  \textbf{Variational Objective}. Complete the function \textit{elbo} with the ELBO loss implementation corresponding to Eq.~\ref{eq:elbo2}. 
+		
+		
+		\item  \textbf{Training}. Train the model for 200 epochs. \textbf{Hint: } Run the \textit{main} function and make sure the number of epochs is set-up correctly in \textit{parse\_args}.
+		%or run the following command: \begin{lstlisting}[language=bash] HW5_vae.py --num_epoches 200 \end{lstlisting}
+		
+		\item \textbf{Visualization}.  
+		\begin{enumerate}
+			\item \textbf{Samples from the generative model}. Complete the method \textit{visualize\_data\_space} following the instructions:
+			
+			\begin{itemize}
+				\item Sample a $z$ from the prior $p(z)$. Use \textit{sample\_diagonal\_gaussian}.
+				\item Use the generative model to parameterize a Bernoulli distribution over $x$ given $z$. Use \textit{self.decoder} and \textit{array\_to\_image}. Plot this distribution $p(x|z)$.
+				\item Sample $x$ from the distribution $p(x|z)$. Plot this sample.
+				\item Repeat the steps above for 10 samples $z$ from the prior. Concatenate all your plots into one $10\times2$ figure where the first column is the distribution over $x$ and the second column is a sample from this distribution. Each row will be a new sample from the prior. Hint: use the function \textit{concat\_images}.
+				\item Attach the figure to your report.
+			\end{itemize}
+			\item \textbf{Latent space visualization}. Produce a scatter plot in the latent space, where each point in the plot represents a different image in the training set. Complete the method \textit{visualize\_latent\_space} following the instructions:
+			\begin{itemize}
+				\item  Encode each image in the training set. Use \textit{self.encoder}.
+				\item Plot the mean vector $\mu$ of $q_{\phi}(z|x)$ in the 2D latent space with a scatter plot. Make sure to color each point according to the class label (0 to 9). 
+				\item Attach the scatter plot to your report.
+			\end{itemize}
+			\item  \textbf{Interpolation between two classes}. Complete the method \textit{visualize\_inter\_class\_interpolation} following the instructions:
+			\begin{itemize}
+				\item  Sample 3 pairs of data points (\textit{self.train\_images}) with different classes (\textit{self.train\_labels}).
+				\item  Encode the data in each pair, and take the mean vectors. Note that the encoder produces a mean vector and a variance one.
+				\item  Interpolate between these mean vectors. We denote the output by $z_{\alpha}$, with $\alpha \in [0,1]$ and the interpolation step being 0.1. Hint:  use the function \textit{interpolate\_mu}.
+				\item Along the interpolation, plot the distributions $p(x|z_{\alpha})$ in the same figure.
+				\item Use \textit{concat\_images} to concatenate these plots into one figure.
+				\item Attach the plot to your report.
+			\end{itemize}
+		\end{enumerate}
+		
+	\end{enumerate}
+	
+	
+\end{Q}
+
+

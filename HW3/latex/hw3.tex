@@ -1,0 +1,291 @@
+        \documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,commath,dsfont}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{xspace}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{float}
+\usepackage[round]{natbib}
+\usepackage{cleveref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[breakable]{tcolorbox}
+\tcbset{breakable}
+\usepackage{mathtools}
+\usepackage{subcaption}
+%\usepackage{symbols}
+
+
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+\newcommand{\colbar}{\rule[-3mm]{.3mm}{1.5em}}
+\newcommand{\rowbar}{\rule[.5ex]{1.5em}{.3mm}}
+\DeclareMathOperator{\rank}{rank}
+
+% following loops stolen from djhsu
+\def\ddefloop#1{\ifx\ddefloop#1\else\ddef{#1}\expandafter\ddefloop\fi}
+% \bbA, \bbB, ...
+\def\ddef#1{\expandafter\def\csname bb#1\endcsname{\ensuremath{\mathbb{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
+% \cA, \cB, ...
+\def\ddef#1{\expandafter\def\csname c#1\endcsname{\ensuremath{\mathcal{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
+% \vA, \vB, ..., \va, \vb, ...
+\def\ddef#1{\expandafter\def\csname v#1\endcsname{\ensuremath{\boldsymbol{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\ddefloop
+
+% \valpha, \vbeta, ...,  \vGamma, \vDelta, ...,
+\def\ddef#1{\expandafter\def\csname v#1\endcsname{\ensuremath{\boldsymbol{\csname #1\endcsname}}}}
+\ddefloop {alpha}{beta}{gamma}{delta}{epsilon}{varepsilon}{zeta}{eta}{theta}{vartheta}{iota}{kappa}{lambda}{mu}{nu}{xi}{pi}{varpi}{rho}{varrho}{sigma}{varsigma}{tau}{upsilon}{phi}{varphi}{chi}{psi}{omega}{Gamma}{Delta}{Theta}{Lambda}{Xi}{Pi}{Sigma}{varSigma}{Upsilon}{Phi}{Psi}{Omega}{ell}\ddefloop
+
+\newcommand\T{{\scriptscriptstyle\mathsf{T}}}
+\def\diag{\textup{diag}}
+
+
+
+\def\SPAN{\textup{span}}
+\def\tu{\textup{u}}
+\def\R{\mathbb{R}}
+\def\E{\mathbb{E}}
+\def\Z{\mathbb{Z}}
+\def\be{\mathbf{e}}
+\def\nf{\nabla f}
+\def\veps{\varepsilon}
+\def\cl{\textup{cl}}
+\def\inte{\textup{int}}
+\def\dom{\textup{dom}}
+\def\Rad{\textup{Rad}}
+\def\lsq{\ell_{\textup{sq}}}
+\def\hcR{\widehat{\cR}}
+\def\hcRl{\hcR_\ell}
+\def\cRl{\cR_\ell}
+\def\hcE{\widehat{\cE}}
+\def\cEl{\cE_\ell}
+\def\hcEl{\hcE_\ell}
+\def\eps{\epsilon}
+\def\1{\mathds{1}}
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+\def\srelu{\sigma_{\textup{r}}}
+\def\vsrelu{\vec{\sigma_{\textup{r}}}}
+\def\vol{\textup{vol}}
+
+\newcommand{\ip}[2]{\left\langle #1, #2 \right \rangle}
+\newcommand{\mjt}[1]{{\color{blue}\emph\textbf{[M:}~#1~\textbf{]}}}
+\newcommand{\sahand}[1]{{\color{green}\emph\textbf{[Sah:}~#1~\textbf{]}}}
+
+\newtheorem{fact}{Fact}
+\newtheorem{lemma}{Lemma}
+\newtheorem{condition}{Condition}
+\theoremstyle{definition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\newenvironment{Q}
+{%
+	\clearpage
+	\item
+}
+{%
+	\phantom{s} %lol doesn't work
+	\bigskip
+	\textbf{Solution.}
+}
+
+\title{CS 446 / ECE 449 --- Homework 3}
+\author{\emph{acard6}}
+\date{Version 1.1}
+
+\begin{document}
+	\maketitle
+	
+	\noindent\textbf{Instructions.}
+	\begin{itemize}
+		\item
+		Homework is due \textbf{\color{red}Tuesday, March 02, at noon CDT}.
+		
+		\item
+		Everyone must submit individually at gradescope under \texttt{hw3} and \texttt{hw3code}.
+		
+		\item
+		The ``written'' submission at \texttt{hw3} \textbf{must be typed}, and submitted in
+		any format gradescope accepts (to be safe, submit a PDF).  You may use \LaTeX, markdown,
+		google docs, MS word, whatever you like; but it must be typed!
+		
+		\item
+		When submitting at \texttt{hw3}, gradescope will ask you to mark out boxes
+		around each of your answers; please do this precisely!
+		
+		\item
+		Please make sure your NetID is clear and large on the first page of the homework.
+		
+		\item
+		Your solution \textbf{must} be written in your own words.
+		Please see the course webpage for full academic integrity information.
+		Briefly, you may have high-level discussions with at most 3 classmates,
+		whose NetIDs you should place on the first page of your solutions,
+		and you should cite any external reference you use; despite all this,
+		your solution must be written in your own words.
+		
+		\item
+		We reserve the right to reduce the auto-graded score for
+		\texttt{hw3code} if we detect funny business (e.g., your solution
+		lacks any algorithm and hard-codes answers you obtained from
+		someone else, or simply via trial-and-error with the autograder).
+		
+		\item
+		When submitting to \texttt{hw3code}, only upload \texttt{hw3\_vae.py} and \texttt{hw3\_gan.py}. Additional files will be ignored.
+		
+	\end{itemize}
+	
+	\noindent\textbf{Version History.}
+	\begin{enumerate}[leftmargin=3\parindent]
+		\item[1.0]
+		Initial Version.
+		\item[1.1]
+		Update code/hw3\_vae.py.
+	\end{enumerate}
+	
+	
+	\begin{enumerate}[font={\Large\bfseries}]
+		\input{vae.tex}        
+		%\input{vae_sol.tex}   
+		\begin{itemize}
+			\item[\textit{Answer A.)}] we know that the $p_{\theta}(x|z) = \prod_{j} p(x_j | z)$, knwoing that $p(x_j=1) = \hat{y}_j \text{ and } p(x_j=0) = 1-\hat{y}_j$ we can 
+			formulate $p_{\theta}(x|z) = \prod_{j=1}^{G} (\hat{y}_{j})^{x_{j}} (1-\hat{y}_{j})^{1-x_{j}}$
+
+			\item[\textit{Answer B.)}] if $z \in \mathbb{R}^2$ and $q_{\Phi}(z|x) = \mathcal{N}(\mu, \sigma^2I)$, and if I is 2d the the encoder is also 2d since the 
+			identity matrix has to match up with the latent variable.
+
+			\item[\textit{Answer C.)}] By reformulating the log-likelihood to $\log p_{\theta}(x) = \log \sum_z q_{\Phi}(z|x) \frac{p_{\theta}(x,z)}{p_{\theta}(z|x)}$\\
+			we can then write it as $\log \sum_z q_{\Phi}(z|x) \frac{p_{\theta}(x,z)}{q_{\Phi}(z|x)} \frac{q_{\Phi}(z|x)}{p_{\theta}(z|x)}$\\ (since we can approximate
+			$p_{\theta}(z|x) \approx q_{\Phi}(z|x)$) we then use jensen ineq on the log to get\\
+			$\log \sum_z q_{\Phi}(z|x) \frac{p_{\theta}(x,z)}{q_{\Phi}(z|x)} \frac{q_{\Phi}(z|x)}{p_{\theta}(z|x)}$ 
+			$\leq \sum_z q_{\Phi}(z|x) \log (\frac{p_{\theta}(x,z)}{q_{\Phi}(z|x)} \frac{q_{\Phi}(z|x)}{p_{\theta}(z|x)})$\\
+			$= \sum_z q_{\Phi}(z|x) \log \frac{p_{\theta}(x,z)}{q_{\Phi}(z|x)} + \sum_z q_{\Phi}(z|x) \log \frac{q_{\Phi}(z|x)}{p_{\theta}(z|x)}$
+			$= \mathcal{L}(p_{\theta}, q_{\Phi}) + KL(q_{\Phi}, p_{\theta})$ so\\ 
+			$\mathcal{L}(p_{\theta}, q_{\Phi}) + KL(q_{\Phi}, p_{\theta} \geq \mathcal{L}(p_{\theta}, q_{\Phi})$
+
+			\item[\textit{Answer D.)}] Properties of KL divergence include, relative entropy is always non-negative, no upper bound exist for the general case,
+			and relative entropy remains well-defined for continuous distributions, and furthermore is invariant under parameter transformations.
+
+			\item[\textit{Answer E.)}] yes they are the same since we can rewrite the expectation as\\
+			$\mathbb{E}_{q_{\Phi}(z|x)}[\log p(x|z) + \log p(z) - \log q(z|x)]$
+			$ = \mathbb{E}_{q_{\Phi}(z|x)}[\log p(x|z)] + \mathbb{E}_{q_{\Phi}(z|x)}[\log p(z) - \log q(z|x)]$ 
+			using the subtraction properties of 2 logs we can then combine them and expand the definition of expectation to become\\
+			$\mathbb{E}_{q_{\Phi}(z|x)}[\log p(x|z)] + \mathbb{E}_{q_{\Phi}(z|x)}[\log \frac{p(z)}{q(z|x)}]$ 
+			$ = \mathbb{E}_{q_{\Phi}(z|x)}[\log p(x|z)] + \sum_z q_{\Phi}(z|x) \log \frac{p(z)}{q_{\Phi}(z|x)}$ we can then substitute with 
+			the definition of KL divergence of $-KL(q_{\Phi}, p) = \int_z q_{\Phi}(z|x) \log \frac{p(z)}{q_{\Phi}(z|x)}$.
+			By substituting we can reach the conclusion that eq. 1 and eq. 2 are infact the same
+
+			\item[\textit{Answer F.)}] if we use the identity matrix for the prior we assume that each sample of q is i.i.d with a normal distribution,
+			which may not perfectly reflect the reality of the nature of real world data. An encoder is necessary to map out helps us extract the most 
+			from an image in the form of data and establish useful correlations between various inputs within the network.
+			
+			\item[\textit{Answer G.)}] KL-divergence is defined part E can be further simplified as\\
+			$-KL(q_{\Phi}, p) = \int_z q_{\Phi}(z|x) \log \frac{p(z)}{q_{\Phi}(z|x)} = -\int q \log q + \int q \log p$\\
+			if p=q and q is a gaussian distribution then we get that\\ 
+			$\int_z q \log q dz= \int_z \frac{1}{\sqrt{2\pi \sigma_q^2}} \exp{(-\frac{(z-\mu_q)^2}{2\sigma^2_q})}*(-\frac{1}{2}\log(2\pi\sigma_q^2))*(-\frac{(z-\mu_q)^2}{2\sigma^2_q})dz$
+			$ = -\frac{1}{2}(1+ \log 2\pi\sigma_q^2)$, \\
+			doing the same for KL(q,p) we get\\
+			$-\int_z q \log p dz =\\ -\int_z \frac{1}{\sqrt{2\pi \sigma_p^2}} \exp{(-\frac{(z-\mu_p)^2}{2\sigma^2_p})}*(-\frac{1}{2}\log(2\pi\sigma_p^2))*(-\frac{(z-\mu_p)^2}{2\sigma^2_p}) dz$
+			$ = \frac{1}{2} \log 2\pi\sigma_p^2 + \frac{\sigma_q^2 + (\mu_q - \mu_p)^2}{2\sigma_p^2}$\\
+			combining the 2 parts we can simplify and get\\ 
+			$KL(q,p) = log \frac{\sigma_2}{\sigma_1}+ \frac{\sigma_1^2+(\mu_1-\mu_2)^2}{2\sigma_2^2} - \frac{1}{2}$
+			sice they're eqaul log(1)=0, the means cancel, and the ratio of the variance is 1 which resolves to 1/2 
+			
+			\item[\textit{Answer H.)}] using the equation of KL from the last part of\\
+			$KL(q,p) = log \frac{\sigma_p}{\sigma_{\Phi}}+ \frac{\sigma_{\Phi}^2+(\mu_{\Phi}-\mu_p)^2}{2\sigma_p^2} - \frac{1}{2}$\\
+			since the variance/std is the same between p and q their ratio is just 1 leaving the equation to be equal to\\
+			$K(q,p) = log \frac{\sigma}{\sigma}+ \frac{\sigma^2+(\mu_{\Phi}-\mu_p)^2}{2\sigma^2} - \frac{1}{2}$
+			$ = \frac{\sigma^2+(\mu_{\Phi}-\mu_p)^2}{2\sigma^2} - \frac{1}{2}$
+			
+			\item[\textit{Answer I.)}] $L(q_{\Phi},\lambda) = \sum_z q_{\Phi} \log p_{\theta} - KL(q_{\Phi}, p(z)) + \lambda((\sum_z q_{\Phi}(z|x)) -1)$\\
+			$\frac{\delta L}{\delta q_{\Phi}} = \log p_{\theta} - \log q_{\Phi} - 1 - \lambda = 0 \rightarrow$
+			$\log q_{\Phi} = \log p_{\theta} - \lambda - 1 \rightarrow$\\
+			$\sum_z q_{\Phi} = \sum_z \exp (\log p_{\theta}-(\lambda+1)) = 1$ take the log of 1 and q to get\\
+			$\log \sum_z \exp (\log p_{\theta}-(\lambda+1))=0 \rightarrow$
+			$\frac{\delta}{\delta \lambda} \sum_z \exp (\log  p_{\theta}-(\lambda+1)) = \sum_z \exp (\log  p_{\theta}-\lambda) = 1$\\
+			multiply by p(z) on both sides $\sum_z p(z) \exp (\log p_{\theta}-\lambda) = p(x)$, take the log of both sides\\
+			$\log p(x) = log \sum_z p(z) \exp ( \log p_{\theta} - \lambda) = \sum_z p(z) \log p_{\theta} - \lambda$
+			using jensen ineq we note thet $\log p(x) < \sum_z p(z) \log p_{\theta} - \lambda = $\\
+			$p(x) <= \exp \sum_z p(z) \log p_{\theta} - \lambda$ therefore $q(z|x)$ is maximized by 
+			$q_{\Phi} = p(z) \exp (\log (p_{\theta}(x|z)))$, when we ger rid of the lagrangian by taking the sum over all q over z is equal to 1
+
+
+			\item[\textit{Answer J.)}] $q_{\Phi}(z|x)$ should be set equal to $p_{\theta}(z|x)$ since we can closely approximate probability $p(z|x)$ as $q(z|x)$
+
+		\end{itemize}
+		
+		\input{vae_coding.tex}        
+		%\input{vae_coding_sol.tex}
+		\begin{center}
+			
+			\includegraphics[scale=0.5]{data_space.png}\\
+			\textbf{figure 1:} epoch = 0\\
+
+
+		\end{center}
+
+
+		\input{gan.tex}        
+		%\input{gan_sol.tex}  
+		\begin{itemize}
+			\item[\textit{Answer A.)}] the classical cost function for a GAN includes the generators cost function and the discriminators loss.
+			loss of the discriminator is $loss_d = -\sum_x \log(D_{\omega}(x)) - \sum_z \log(1 - D_{\omega}(G_{\theta}(z)))$. Where as the loss for the generator
+			is $loss_g = -\sum_z \log(D_{\omega}(G_{\theta}(z)))$. So the cost is just $cost = loss_d + loss_g$
+
+			\item[\textit{Answer B.)}] using $p_G(x)$ as the distribution on the data domain induced by the generator we get the 
+			$-\int_{x} p_{data}(x) \log(D_{\omega}(x))dx - \int_{z} p_z(z) \log(1-D_{\omega}(G_{\theta}(x))) dz =$\\
+			$-\int_{x} p_{data}(x) \log(D_{\omega}(x)) + p_G(x) \log(1-D_{\omega}(x)) dx = \int_x L(x,D, \dot{D}) dx$
+
+			\item[\textit{Answer C.)}] The optimal value for the discriminator assuming arbitrary capacity and a fixed G() and D() for our loss L, we find that we derive
+			our w.r.t D and set it equal to 0 to get
+			$\frac{\delta L(x,D,\dot{D})}{\delta D} = -\frac{p_{data}}{D}+\frac{p_G}{1-D} = 0 \rightarrow D^*(x) = \frac{p_{data}(x)}{p_{data}(x) + p_G(x)}$
+
+			\item[\textit{Answer D.)}] To find the optimal generator we begin by substituting $D^*(x)$ for $ D(x)$ in the equation from part B, we see that we get\\
+			$-\int_{x} p_{data}(x) \log(D^*(x)) + p_G(x) \log(1-D^*(x)) dx = \\
+			-\int_{x} p_{data}(x) \log(\frac{p_{data}(x)}{p_{data}(x) + p_G(x)}) + p_G(x) \log(1-\frac{p_{G}(x)}{p_{data}(x) + p_G(x)}) dx\\
+			= -2JSD(p_{data}, p_G) + \log(4) = JSD(p_{data}, p_G) = -KL(p_{data}, M) - KL(p_G, M) + \log(4)$\\
+			which gives us the optimal generator is $p_G(x) = p_{data}(x)$
+
+			\item[\textit{Answer E.)}] the probability of a uniform distribution is $\frac{1}{b-a}$ so to find KL we integrate \\
+			$KL(\mathbb{P}_1, \mathbb{P}_2) = \int_{x} p_{\mathbb{P}_1}(x) \log(\frac{p_{\mathbb{P}_1}(x)}{p_{\mathbb{P}_2}(x)}) = 
+			\int_{0.5}^{1} \frac{1}{1-0} \log(\frac{ \frac{1}{1-0} }{ \frac{1}{1.5-0.5} })dx =
+			\int_{0.5}^{1} \log(1)dx = 0$,\\
+			given that the probability of $\mathbb(P)_3$ is also 1, when put into the KL divergence it to goes to 0. For the Wasserstein distance we get that\\
+			$W(\mathbb{P}_1, \mathbb{P}_2) = min_{p_j(x,x') \in \prod(\mathbb{P}_1, \mathbb{P}_2)} \mathbb{E}[||x-x'||] = 
+			\int f(x) dp_{\mathbb{P}_1}  -\int f(x) dp_{\mathbb{P}_2} \rightarrow\\ 
+			W(\mathbb{P}_1, \mathbb{P}_2) = (\int_{0}^{1} |F(x) - G(x)| dx)$, where F and G are the cdf's of $\mathbb{P}_1, \mathbb{P}_2$ respectively, and since 
+			G = 1/2F on the interval 0 to 1 we set $2*dp_{\mathbb{P}_2} = dp_{\mathbb{P}_1}$ W to be \\
+			$\int_{0}^{1} 2 f(x)-\frac{1}{2} dx = \frac{3}{4}$\\
+			We repeat the process for $W(\mathbb{P}_3,\mathbb{P}_3)$ and we note that $\mathbb{P}_3$ is out of the interval 0 to 1 so thus we just get that W is
+			just $\int_{0}^{1} \frac{1}{1} dx = 1$
+
+		\end{itemize}
+		
+		\input{gan_coding.tex}        
+		%\input{gan_coding_sol.tex}     
+		\begin{center}
+			
+			\includegraphics[scale=0.9]{test_0.png}\\
+			\textbf{figure 1:} epoch = 0\\
+
+			\includegraphics[scale=0.9]{test_30.png}\\
+			\textbf{figure 2:} epoch = 30\\
+
+			\includegraphics[scale=0.9]{test_70.png}\\
+			\textbf{figure 3:} epoch = 70\\
+
+		\end{center}
+	\end{enumerate}
+\end{document}

@@ -1,0 +1,60 @@
+\begin{Q}
+\textbf{\Large Principal Component Analysis}\\
+
+\begin{enumerate}
+
+\item For each of the following statements, specify whether the statement is true or false. If you think the statement is wrong, explain in 1 to 2 sentences why it is wrong.
+
+
+\begin{itemize}
+\item True or False: As shown in the figure below, PCA seeks a subspace such that the sum of all the vertical distance to the subspace (the dashed line) is minimized.
+\begin{center}
+ \includegraphics[width=8cm]{figs/pca.pdf}
+ \end{center}
+\underline{\textbf{True}}
+
+
+\item True or False: PCA seeks a projection that best represents the data in a least-squares sense.\\
+\textbf{\underline{True}}
+
+\item  True or False: PCA seeks a linear combination of variables such that the maximum variance is extracted from the variables.\\
+\textbf{\underline{True}}
+
+\item True or False: The principal components are not necessarily orthogonal to each other. \\
+\textbf{\underline{False:}} PCA uses covariance matrix which are always symmetric and always have eigenvalues and vectors. The eigenvectors are always orthogonal to the symmetric matrix from which they stem from.
+
+\end{itemize}
+
+
+\item Recall that PCA finds a direction $w$ in which the projected data has highest variance by solving the following program:
+	\begin{equation}
+	\max_{w:||w||^2=1}w^T\Sigma w.
+	\label{equ:pca}
+	\end{equation}
+	Here, $\Sigma$ is a covariance matrix. You are given a dataset of two 2-dimensional points $(1,3)$ and $(4,7)$. Draw the two data points on the 2D plane. What is the first principal component $w$ of this dataset?\\
+
+$\mu_{x} = \frac{1+4}{2}=2.5, \mu_{y} = \frac{3+3}{2}=5$,  Cov(x,y) = $\sum^{2}_{i=1} \frac{(x_{i}-\mu_{x})*(y_{i}-\mu_{y})}{2} = 3$, Var(x)=2.25, Var(y)=4\\
+$\Sigma = \left[ \begin{matrix}
+2.25 & 3\\ 3 & 4 \end{matrix} \right]$\\
+Its eigenvalues are $\lambda = 0, \frac{25}{4}$, our largest eigenvalue greater than 0 and its corresponding eigenvector is 
+$\left[ \begin{matrix} 2.25 & 3\\ 3 & 4 \end{matrix} \right]\text{x} = \lambda\text{x} \rightarrow \left[ \begin{matrix} -3\\ 4 \end{matrix} \right]$.
+\\
+
+
+\item Now you are given a dataset of four points $(2,0)$, $(2,2)$, $(6,0)$ and $(6,2)$. Draw the four data points on the 2D plane. Given this dataset, what is the dimension of the covariance matrix $\Sigma$ in Eq.~\eqref{equ:pca}? Also, explicitly write down the values of $\Sigma$ given the dataset.
+
+the mean and variance of x and y are $\mu_x = 4, \mu_y = 1, Var(x) = 4, Var(y) = 1,with the Cov(x,y) = 0$. The dimensions of the covariance matrix $\Sigma$ is 2, $$\Sigma = \left[\begin{matrix} 4 & 0 \\ 0 & 1\end{matrix} \right]$$
+
+\item What is the optimal $w$ and the optimal value of the program in Eq.~\eqref{equ:pca}  given \[ \Sigma= \left[ \begin{array}{cccc}
+	12 & 0 & 0 & 0\\
+	0 & 6 & 0 & 0\\
+	0 & 0 & 20 & 0\\
+	0 & 0 & 0 & 10\\
+	\end{array} \right].\] 
+	
+Knowing the optimal $w$ is found by taking the eigenvector of the largest eigenvalue of the covariance matrix, which after being computed leaves the eigenvalues to be $\lambda = 10, 12, 6, 20$, taking the largest value and finding its vector is is $\lambda = 20 \rightarrow \left[ \begin{matrix} 0 \\ 0 \\ 1 \\ 0 \end{matrix} \right]$ and plugginh this back into Eq. 1 we get $\max_{w:||w||^2=1}w^T\Sigma w = 20$
+
+
+\end{enumerate}
+\end{Q}
+          

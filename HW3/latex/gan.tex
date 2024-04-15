@@ -1,0 +1,41 @@
+\begin{Q}
+\textbf{\Large Generative Adversarial Networks [Written]}\\
+
+Here we discuss distribution-comparison-related problems in Generative Adversarial Networks (GANs).
+
+\begin{enumerate}
+	\item What is the cost function for classical GANs? Use $D_{\omega} (x)$ as the discriminator and $G_\theta(x)$ as the generator.
+	
+	\item Assume arbitrary capacity for both discriminator and generator. In this case we refer to the discriminator using $D(x)$, and denote the distribution on the data domain induced by the generator via $p_G (x)$. State an equivalent problem to the one asked for in part (a), by using $p_G (x)$.
+	
+	\item Assuming arbitrary capacity, derive the optimal discriminator $D^\ast(x)$ in terms of $p_\text{data}(x)$ and $p_G(x)$.
+	
+	\textbf{Hint:} you can think of fixing generator $G(\cdot)$ to find the optimal value for discriminator $D(\cdot)$.
+	
+% 	\begin{comment}
+	
+% 	\textbf{Hint:} you may need the Euler-Lagrange equation:
+% 	\begin{align*}
+% 		\frac{\partial L(x, D, \dot{D})}{\partial D} - \frac{d}{dx} \frac{\partial L(x, D, \dot{D})}{\partial \dot{D}} = 0
+% 	\end{align*}
+% 	where $\dot{D} = \frac{\partial D}{\partial x}$.
+	
+% 	\end{comment}
+	
+	\item Assume arbitrary capacity and an optimal discriminator $D^\ast(x)$ from (c), show that the optimal generator $G^\ast(x)$ generates the distribution $p^\ast_G = p_\text{data}$, where $p_\text{data}(x)$ is the data distribution.
+	
+	\textbf{Hint:} you may need the Jensen-Shannon divergence:
+	\begin{align*}
+		\text{JSD}(p_\text{data}, p_G) = \frac{1}{2} \text{KL}(p_\text{data}, M) + \frac{1}{2} \text{KL}(p_G, M),
+	\end{align*}
+	where $M = \frac{1}{2} (p_\text{data} + p_G)$.
+	
+	\item More recently, researchers have proposed to use the Wasserstein distance instead of divergences to train the models since the KL divergence often fails to give meaningful information for training. Consider three distributions, $\mathbb{P}_1 \sim U[0, 1]$, $\mathbb{P}_2 \sim U[0.5, 1.5]$, and $\mathbb{P}_3 \sim U[1, 2]$, where $U[a, b]$ is uniform distribution over $[a, b]$. Calculate $\text{KL}(\mathbb{P}_1, \mathbb{P}_2)$, $\text{KL}(\mathbb{P}_1, \mathbb{P}_3)$, $\mathbb{W}_1 (\mathbb{P}_1, \mathbb{P}_2)$, and $\mathbb{W}(\mathbb{P}_1, \mathbb{P}_3)$, where $\mathbb{W}_1(\cdot, \cdot)$ is the Wasserstein-1 distance between two distributions.
+	 
+	\textbf{Hint:} this subproblem requires no \textit{real} mathematical computation. What you need to do is to understand the intuitive meaning of KL-divergence and Wasserstein distance. You may find wiki of \textit{Earth mover's distance} and \textit{Wasserstein metric} useful.
+\end{enumerate}
+
+\end{Q}
+          
+
+            
